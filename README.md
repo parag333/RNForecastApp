@@ -1,97 +1,234 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🌦️ RN Forecast — React Native Weather App
 
-# Getting Started
+A beautifully designed, cross-platform weather application built with **React Native CLI** and **TypeScript**. Search any city worldwide to get real-time weather conditions, save your favorite cities, and enjoy a polished UI with gradient backgrounds that adapt to current weather conditions.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## ✨ Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- **Live Weather Data** — Fetches real-time weather from the [OpenWeatherMap API](https://openweathermap.org/api) including temperature, humidity, pressure, wind speed, visibility, and sunrise/sunset times.
+- **City Search** — Search any city by name and instantly view detailed weather information.
+- **Favorite Cities** — Save cities to a persistent favorites list powered by AsyncStorage; quickly revisit them with a single tap.
+- **Multi-Select & Bulk Delete** — Long-press to enter selection mode and delete multiple favorites at once.
+- **Dynamic Weather Gradients** — The weather detail screen's background gradient changes based on current conditions (sunny, rainy, cloudy, thunderstorm, snow, etc.).
+- **Adaptive Weather Icons** — Condition-specific icons from MaterialCommunityIcons for an intuitive visual experience.
+- **Skeleton Loading** — Animated skeleton placeholders provide smooth feedback while data loads.
+- **Fade-In Animations** — Weather content gracefully fades and slides into view.
+- **Centralized Design System** — A single theme file governs all colors, typography, spacing, shadows, and radii for consistency across the app.
+- **Type-Safe Navigation** — Fully typed React Navigation stack with TypeScript generics.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+---
 
-```sh
-# Using npm
+## 🏗️ Tech Stack
+
+| Layer            | Technology                                                                 |
+| ---------------- | -------------------------------------------------------------------------- |
+| **Framework**    | React Native 0.85.3 (CLI — no Expo)                                       |
+| **Language**     | TypeScript 5.x                                                             |
+| **Navigation**   | React Navigation 7 (Native Stack)                                          |
+| **State**        | React Hooks (`useState`, `useEffect`, custom hooks)                        |
+| **Storage**      | `@react-native-async-storage/async-storage` (persistent favorites)         |
+| **HTTP**         | Native `fetch` API                                                         |
+| **Icons**        | `react-native-vector-icons` (MaterialCommunityIcons)                       |
+| **UI**           | `react-native-linear-gradient`, `react-native-safe-area-context`           |
+| **Config**       | `react-native-config` (`.env` file for API keys)                           |
+| **Testing**      | Jest + React Test Renderer                                                 |
+| **Linting**      | ESLint + Prettier                                                          |
+
+---
+
+## 📁 Project Structure
+
+```
+RNForecastApp/
+├── App.tsx                         # Root component — navigation setup
+├── index.js                        # Entry point
+├── app.json                        # App metadata
+├── .env                            # Environment variables (API key — not committed)
+├── package.json
+├── tsconfig.json
+│
+├── src/
+│   ├── api/
+│   │   └── weatherApi.ts           # OpenWeatherMap API service
+│   │
+│   ├── components/
+│   │   ├── CityListItem.tsx        # Favorite city row (checkbox, name, delete, chevron)
+│   │   ├── SearchBar.tsx           # Search input with Search & Add-to-Favorites buttons
+│   │   ├── SkeletonLoader.tsx      # Animated skeleton loading placeholder
+│   │   └── WeatherDetailCard.tsx   # Glassmorphic detail card (humidity, pressure, etc.)
+│   │
+│   ├── constants/
+│   │   └── config.ts               # API base URL, API key, storage keys
+│   │
+│   ├── hooks/
+│   │   ├── useCities.ts            # Custom hook — CRUD for favorite cities list
+│   │   └── useWeather.ts           # Custom hook — fetch weather with loading/error state
+│   │
+│   ├── models/
+│   │   ├── city.ts                 # City interface (id, name, checked)
+│   │   └── weather.ts              # WeatherData interface (OpenWeatherMap response shape)
+│   │
+│   ├── navigation/
+│   │   ├── AppNavigator.ts         # Stack navigator instance
+│   │   └── types.ts                # RootStackParamList, screen prop types
+│   │
+│   ├── screens/
+│   │   ├── home_page.tsx           # Home — search bar, favorites list, empty state
+│   │   └── weather_info.tsx        # Weather detail — hero section, detail grid, sunrise/sunset
+│   │
+│   ├── storage/
+│   │   └── cityStorage.ts          # AsyncStorage wrapper (getCities / saveCities)
+│   │
+│   ├── theme/
+│   │   └── index.ts                # Design system — Colors, Typography, Spacing, Shadows,
+│   │                               #   Radii, WeatherIcons, WeatherGradients, utilities
+│   │
+│   └── types/
+│       └── declarations.d.ts       # Module declarations for non-TS dependencies
+│
+├── android/                        # Android native project
+├── ios/                            # iOS native project
+└── __tests__/                      # Unit tests
+```
+
+---
+
+## 📱 Screens
+
+### Home Screen
+- Gradient header with app title and weather icon
+- Search bar with **Search** (navigate to weather) and **Favorites** (save city) actions
+- FlatList of saved cities with swipe-to-delete and long-press multi-select
+- Elegant empty state with instructional text
+
+### Weather Info Screen
+- Full-screen gradient background that adapts to weather conditions
+- Hero section: large weather icon, temperature in °C, description, city & country
+- "Feels like" pill badge with high/low temperatures
+- 2×2 glassmorphic detail cards: Humidity, Pressure, Wind Speed, Visibility
+- Sunrise/Sunset display with formatted times
+- Graceful error state with a "Go Back & Try Again" button
+- Heart button in top bar to add city to favorites
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** ≥ 22.11.0
+- **Ruby** (for iOS CocoaPods)
+- **Xcode** (iOS) / **Android Studio** (Android)
+- **React Native CLI** environment set up — follow the [official guide](https://reactnative.dev/docs/set-up-your-environment)
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/parag333/RNForecastApp.git
+cd RNForecastApp
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Set Up Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+WEATHER_API_KEY=your_openweathermap_api_key_here
+```
+
+> Get a free API key at [https://openweathermap.org/api](https://openweathermap.org/api)
+
+### 4. iOS Setup (macOS only)
+
+```bash
+cd ios && pod install && cd ..
+```
+
+### 5. Run the App
+
+```bash
+# Start Metro bundler
 npm start
 
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+# Run on Android
 npm run android
 
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+# Run on iOS
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🔑 Environment Variables
 
-## Step 3: Modify your app
+| Variable           | Description                            | Required |
+| ------------------ | -------------------------------------- | -------- |
+| `WEATHER_API_KEY`  | OpenWeatherMap API key                 | ✅       |
 
-Now that you have successfully run the app, let's make changes!
+The app uses [`react-native-config`](https://github.com/luggit/react-native-config) to load environment variables from the `.env` file at build time.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+> **⚠️ Important:** Never commit your `.env` file. It is listed in `.gitignore` to prevent accidental exposure of API keys.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+---
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## 🎨 Design System
 
-## Congratulations! :tada:
+The entire visual language is defined in [`src/theme/index.ts`](src/theme/index.ts):
 
-You've successfully run and modified your React Native App. :partying_face:
+- **Colors** — Primary gradients (indigo → teal), surfaces, text hierarchy, semantic colors, glassmorphism tokens
+- **Typography** — 8 preset scales from `hero` (52px) to `small` (11px)
+- **Spacing** — 6-step scale: `xs`(4) → `xxl`(48)
+- **Radii** — From `sm`(8) to `round`(999)
+- **Shadows** — Three elevation levels: `small`, `medium`, `large`
+- **Weather Mappings** — Condition-to-gradient and condition-to-icon lookup tables for 13+ weather types
 
-### Now what?
+---
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+## 🧪 Running Tests
 
-# Troubleshooting
+```bash
+npm test
+```
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+---
 
-# Learn More
+## 🛠️ Available Scripts
 
-To learn more about React Native, take a look at the following resources:
+| Script            | Command                        | Description                  |
+| ----------------- | ------------------------------ | ---------------------------- |
+| `npm start`       | `react-native start`           | Start Metro bundler          |
+| `npm run android` | `react-native run-android`     | Build & run on Android       |
+| `npm run ios`     | `react-native run-ios`         | Build & run on iOS           |
+| `npm test`        | `jest`                         | Run unit tests               |
+| `npm run lint`    | `eslint .`                     | Lint the codebase            |
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+## 🙏 Acknowledgments
+
+- [OpenWeatherMap](https://openweathermap.org/) for the free weather API
+- [React Native](https://reactnative.dev/) community
+- [MaterialCommunityIcons](https://materialdesignicons.com/) for the icon set

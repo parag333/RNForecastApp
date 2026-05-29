@@ -1,4 +1,4 @@
-package com.rclidriverapp
+package com.gigity.rnforecast
 
 import android.app.Application
 import com.facebook.react.PackageList
