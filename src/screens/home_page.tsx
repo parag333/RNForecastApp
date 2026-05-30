@@ -11,9 +11,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CitySearchBar from '../components/SearchBar';
+import CitySearchDropDown from '../components/CitySearchDropDown';
 import CityListItem from '../components/CityListItem';
 import { useCities } from '../hooks/useCities';
+import { useCitySearch } from '../hooks/useCitySearch';
 import { HomeScreenProps } from '../navigation/types';
+import { CitySearchResult } from '../models/searchResults';
 import { Colors, Radii, Shadows, Spacing, Typography } from '../theme';
 
 const HomePage: React.FC<HomeScreenProps> = ({ navigation }) => {
@@ -25,6 +28,9 @@ const HomePage: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [searchCity, setSearchCity] = useState('');
   const [isSelectMultiple, setIsSelectMultiple] = useState<boolean>(false);
 
+  const { searchData, isLoading, errorMessage: searchError, clearResults } =
+    useCitySearch(searchCity);
+  
   const handleOnChange = (text: string) => {
     setSearchCity(text);
     if (emptySearchMessage) {
@@ -32,9 +38,15 @@ const HomePage: React.FC<HomeScreenProps> = ({ navigation }) => {
     }
   };
 
+  const handleSelectCity = (city: CitySearchResult) => {
+    setSearchCity(city.name);
+    clearResults();
+  };
+
   const handleSubmit = (city: string) => {
     const trimmed = city.trim();
     if (trimmed) {
+      clearResults();
       navigation.navigate('WeatherInfo', { searchCity: trimmed });
     } else {
       setEmptySearchMessage('Please enter a city name');
@@ -50,6 +62,7 @@ const HomePage: React.FC<HomeScreenProps> = ({ navigation }) => {
     await addCity(trimmed);
     setSearchCity('');
     setEmptySearchMessage('');
+    clearResults();
   };
 
   const handleDelete = async (cityId: number) => {
@@ -75,7 +88,11 @@ const HomePage: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.screen}>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <StatusBar
+        barStyle="light-content"
+        translucent
+        backgroundColor="transparent"
+      />
       <View
         style={[
           styles.headerContent,
@@ -108,6 +125,13 @@ const HomePage: React.FC<HomeScreenProps> = ({ navigation }) => {
           onSubmit={() => handleSubmit(searchCity)}
           onAddCity={handleAddCity}
           errorMessage={emptySearchMessage}
+        />
+
+        <CitySearchDropDown
+          results={searchData}
+          isLoading={isLoading}
+          visible={isLoading || searchData.length > 0}
+          onSelectCity={handleSelectCity}
         />
 
         {/* Multi-select toolbar */}
@@ -238,7 +262,8 @@ const styles = StyleSheet.create({
   // ── Body ──
   body: {
     flex: 1,
-    marginTop: Spacing.md
+    marginTop: Spacing.md,
+    zIndex: 10,
   },
 
   // ── Toolbar ──
