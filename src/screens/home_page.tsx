@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   StatusBar,
@@ -6,6 +6,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TextInput,
+  Button
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,6 +20,8 @@ import { useCitySearch } from '../hooks/useCitySearch';
 import { HomeScreenProps } from '../navigation/types';
 import { CitySearchResult } from '../models/searchResults';
 import { Colors, Radii, Shadows, Spacing, Typography } from '../theme';
+import NativeLocalStorage from '../specs/NativeLocalStorage';
+
 
 const HomePage: React.FC<HomeScreenProps> = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -30,6 +34,33 @@ const HomePage: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const { searchData, isLoading, errorMessage: searchError, clearResults } =
     useCitySearch(searchCity);
+  
+  const EMPTY = '<empty>';
+
+  const [value, setValue] = useState<string | null>(null);
+  const [editingValue, setEditingValue] = useState<string | null>(null);
+
+  useEffect(() => {
+    const savedValue = NativeLocalStorage?.getItem('myKey');
+    console.log(`saved = ${savedValue}`);
+    setValue(savedValue ?? '');
+  }, []);
+
+  function saveValue(){
+    NativeLocalStorage?.setItem(editingValue ?? EMPTY, 'myKey');
+    setValue(editingValue);
+    console.log(`edit save = ${editingValue}`);
+  }
+
+  function clearValue(){
+    NativeLocalStorage?.clear();
+    setValue('');
+  }
+  
+  function deletValue(){
+    NativeLocalStorage?.removeItem('myKey');
+    setValue('');
+  }
   
   const handleOnChange = (text: string) => {
     setSearchCity(text);
@@ -204,6 +235,11 @@ const HomePage: React.FC<HomeScreenProps> = ({ navigation }) => {
           }
           showsVerticalScrollIndicator={false}
         />
+        {/* <Text style = {styles.emptyTitle}>Current stored value is = {value ?? 'No value'}</Text>
+        <TextInput placeholder='Enter a text to be saved' style = {styles.input} onChangeText={setEditingValue}/>
+        <Button title="Save" onPress={saveValue} />
+        <Button title="Remove" onPress={clearValue} />
+        <Button title="Clear" onPress={deletValue} /> */}
       </View>
     </View>
   );
@@ -340,6 +376,15 @@ const styles = StyleSheet.create({
     ...Typography.subtitle,
     color: Colors.textPrimary,
     marginBottom: Spacing.sm,
+  },
+  input: {
+    margin: 10,
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 1,
+    paddingLeft: 5,
+    paddingRight: 5,
+    borderRadius: 5,
   },
   emptySubtitle: {
     ...Typography.body,

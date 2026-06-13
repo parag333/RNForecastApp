@@ -1951,6 +1951,28 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
+  - RNVectorIcons (10.3.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -2033,6 +2055,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeDependencies (from `../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 EXTERNAL SOURCES:
@@ -2193,6 +2216,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -2271,12 +2296,13 @@ SPEC CHECKSUMS:
   React-utils: 2851415c698da4b18331f9a445825d260fffa32c
   React-webperformancenativemodule: 9f29ed34f6f6c01dac688b95fd2dfcbccf3aed7a
   ReactAppDependencyProvider: a54c0c9b976766e1b6d5e2bb4d1ad0d15913e9e1
-  ReactCodegen: 9af5798e943781fd2318dab7b60f25337388047c
+  ReactCodegen: 5695cd1ed956a8f9b357606736edcf0b2c829a70
   ReactCommon: 3ec2a55999d296af90c24beb66c8a77dc660d3ef
   ReactNativeDependencies: 741952afdcb0464741ad8cb9c38f9c7b3eb1aeb5
   RNScreens: 032083414633a4d94cbcf08f8ab5019d72d1ba36
+  RNVectorIcons: 9d52f79c911eb6099a14b8135bd261ccef039fcb
   Yoga: 36fee8f1fca3f54a28c3d7f80e69f66d73d3af96
 
-PODFILE CHECKSUM: fd0adca6af2f74c3b7e25988612c92ff3bcb98ac
+PODFILE CHECKSUM: 714d90dd0e83396f14eba3d156370bd6f7f9296b
 
 COCOAPODS: 1.16.2
